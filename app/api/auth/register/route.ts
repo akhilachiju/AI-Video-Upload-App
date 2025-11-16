@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     }
 
     await connectToDatabase();
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email });
     if (existingUser) {
       return NextResponse.json(
         { error: "User already registered" },
