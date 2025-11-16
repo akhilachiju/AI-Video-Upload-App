@@ -1,26 +1,23 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { Eye, EyeOff, Mail, Lock, Video, ArrowRight } from "lucide-react";
 
-function LoginPage() {
+export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
-  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg("");
-    setSuccessMsg("");
     setLoading(true);
+    setError("");
 
     try {
       const result = await signIn("credentials", {
@@ -30,112 +27,112 @@ function LoginPage() {
       });
 
       if (result?.error) {
-        setErrorMsg(result.error);
+        setError("Invalid email or password");
       } else {
-        setSuccessMsg("Login successful!");
-        setTimeout(() => router.push("/dashboard"), 1500);
+        const session = await getSession();
+        if (session) {
+          router.push("/");
+        }
       }
-    } catch (error: unknown) {
-      setErrorMsg(error instanceof Error ? error.message : "Something went wrong");
+    } catch {
+      setError("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white px-4">
-      {/* Success Toast */}
-      {successMsg && (
-        <div className="fixed top-5 right-5 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50">
-          {successMsg}
-        </div>
-      )}
-
-      <form
-        onSubmit={handleSubmit}
-        className="
-          relative w-full max-w-md
-          p-8
-          rounded-3xl
-          bg-white/10 backdrop-blur-md
-          border border-white/20
-          shadow-lg
-          ring-1 ring-white/10
-        "
-      >
-        <h2 className="text-2xl sm:text-3xl text-center font-bold text-gray-200 mb-6">
-          Login
-        </h2>
-
-        {/* Email */}
-        <div className="mb-5 relative">
-          <label className="block text-sm text-gray-400">Email</label>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-            className="
-              mt-1 w-full px-3 py-2 rounded-lg
-              bg-black/30 placeholder:text-gray-500 text-gray-200
-              border border-gray-700/50
-              focus:outline-none focus:ring-2 focus:ring-gray-500
-            "
-          />
-          {errorMsg && (
-            <p className="text-xs text-red-500 mt-1 text-right">{errorMsg}</p>
-          )}
-        </div>
-
-        {/* Password */}
-        <div className="mb-6 relative">
-          <label className="block text-sm text-gray-400">Password</label>
-          <div className="relative">
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="
-                mt-1 w-full px-3 py-2 pr-10 rounded-lg
-                bg-black/30 placeholder:text-gray-500 text-gray-200
-                border border-gray-700/50
-                focus:outline-none focus:ring-2 focus:ring-gray-500
-              "
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200"
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </button>
+    <div className="min-h-screen flex items-center justify-center p-4 bg-linear-to-br from-purple-900/20 via-black to-pink-900/20">
+      <div className="w-full max-w-md">
+        
+        {/* Logo Section */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-linear-to-r from-purple-600 to-pink-600 rounded-2xl mb-4">
+            <Video className="w-8 h-8 text-white" />
           </div>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back</h1>
+          <p className="text-gray-400">Sign in to continue to ReelsPro</p>
         </div>
 
-        {/* Submit */}
-        <button
-          type="submit"
-          disabled={loading}
-          className={`
-            w-full py-3 rounded-lg text-sm font-medium transition
-            ${loading ? "bg-gray-700 text-gray-300 cursor-not-allowed" : "bg-gray-800 hover:bg-gray-700 text-white"}
-          `}
-        >
-          {loading ? "Logging in..." : "Login"}
-        </button>
+        {/* Login Form */}
+        <form onSubmit={handleSubmit} className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 space-y-6">
+          
+          {/* Email Field */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Email</label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="bg-white/5 backdrop-blur-xl border border-white/10 text-white placeholder:text-gray-400 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 w-full pl-12"
+                required
+              />
+            </div>
+          </div>
 
-        {/* Footer */}
-        <div className="mt-5 text-center text-sm text-gray-400">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-gray-200 font-medium underline underline-offset-2">
-            Register
-          </Link>
+          {/* Password Field */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-300">Password</label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Enter your password"
+                className="bg-white/5 backdrop-blur-xl border border-white/10 text-white placeholder:text-gray-400 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-300 w-full pl-12 pr-12"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors"
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-3">
+              <p className="text-red-400 text-sm">{error}</p>
+            </div>
+          )}
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium px-6 py-3 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl w-full flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <>
+                Sign In
+                <ArrowRight className="w-4 h-4" />
+              </>
+            )}
+          </button>
+        </form>
+
+        {/* Register Link */}
+        <div className="text-center mt-6">
+          <p className="text-gray-400">
+             Don&apos;t have an account?{" "}
+            <Link
+              href="/register"
+              className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+            >
+              Sign up
+            </Link>
+          </p>
         </div>
-      </form>
+      </div>
     </div>
   );
 }
-
-export default LoginPage;
