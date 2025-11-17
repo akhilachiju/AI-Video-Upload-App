@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Video Upload App
+A modern full-stack video platform built with Next.js 13, TypeScript, MongoDB, and ImageKit.
+Users can register, sign in, upload vertical videos, auto-generate thumbnails, and browse a smooth video feed with playback. 
 
-## Getting Started
+Features
+Authentication
+-User registration & login with NextAuth Credentials Provider
+-Secure password hashing with bcrypt
+-JWT-based session handling
 
-First, run the development server:
+Video Uploading
+-Client-side drag-and-drop upload
+-Upload videos to ImageKit
+-Auto-generated thumbnails using server utilities
+-Upload progress & error handling
+-Vertical video support
+Video Feed & Player
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+-Smooth video scrolling feed
+-Auto-play on video page
+-View video stats (views, likes)
+-Responsive UI built with Tailwind CSS
+-Lucide icons for clean UI visuals 
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Database: MongoDB with Mongoose 
+models:
+-User
+-Video
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Architecture
+-Next.js App Router (server & client components)
+-API routes for video upload, fetch, auth, and user creation
+-TypeScript types across frontend & backend
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Category     | Technology                                 |
+| ------------ | ------------------------------------------ |
+| Frontend     | Next.js 13 (App Router), React, TypeScript |
+| Backend      | Next.js Server Actions & API Routes        |
+| Database     | MongoDB + Mongoose                         |
+| Auth         | NextAuth.js (JWT session)                  |
+| File Storage | ImageKit (videos & thumbnails)             |
+| Styling      | Tailwind CSS                               |
+| Icons        | Lucide React                               |
+| Others       | bcryptjs, ESLint, Zod                      |
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+Future Improvements
+*User profile pages
+*Likes, comments, and social interactions
+*Search & categories
+*Better CDN optimization & streaming
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
